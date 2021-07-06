@@ -23,12 +23,11 @@ public class IPv4Check{
         final String IPv4PatternFinal = "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$";
         final String filePath = System.getProperty("user.dir") + "\\log.txt";
         
-        int checkIP;
         String userIpString; // args or scanner로 받는 ipString
         IPv4Check iCheck = new IPv4Check(); // IPv4Check class iCheck
 
         userIpString = iCheck.checkArg(args); // checkArg 함수에서 리턴받은 String ipString에 저장
-        checkIP = iCheck.checkIP(IPv4PatternFinal, userIpString);
+        int checkIP = iCheck.checkIP(IPv4PatternFinal, userIpString); // checkIP에서 리턴받은 값 int checkIP에 저장
         
         iCheck.fileWirte(filePath, userIpString, checkIP); // 파일관련 log 작성하는 함수
 
