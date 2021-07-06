@@ -1,9 +1,19 @@
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.lang.Class;
 
-// 사용자가 입력한 IPv4 값이 유효한지 유효하지 않은지 확인하고 terminal에 출력해주는 파일
+import javax.lang.model.util.SimpleAnnotationValueVisitor6;
+
+// 파일관련 import
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+
+
+/*********************************************************************************
+사용자가 입력한 IPv4 값이 유효한지 유효하지 않은지 확인하고 terminal에 출력해주는 파일
+**********************************************************************************/
 
 public class IPv4Check{
 
@@ -11,12 +21,16 @@ public class IPv4Check{
 
         //imutable regular expression checking IPv4
         final String IPv4PatternFinal = "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$";
-
+        final String filePath = System.getProperty("user.dir") + "\\log.txt";
+        
+        int checkIP;
         String userIpString; // args or scanner로 받는 ipString
         IPv4Check iCheck = new IPv4Check(); // IPv4Check class iCheck
 
         userIpString = iCheck.checkArg(args); // checkArg 함수에서 리턴받은 String ipString에 저장
-        iCheck.checkIP(IPv4PatternFinal, userIpString);
+        checkIP = iCheck.checkIP(IPv4PatternFinal, userIpString);
+        
+        iCheck.fileWirte(filePath, userIpString, checkIP); // 파일관련 log 작성하는 함수
 
     }
 
@@ -40,7 +54,7 @@ public class IPv4Check{
     }
 
     // 정규식 패턴과 사용자가 입력한값을 비교하여 IPv4 valid or invalid cmd에 출력하는 함수
-    public void checkIP(String IPv4PatternFinal, String userIpString){
+    public int checkIP(String IPv4PatternFinal, String userIpString){
         
         Pattern pattern = Pattern.compile(IPv4PatternFinal);
         Matcher matcher = pattern.matcher(userIpString);
@@ -48,8 +62,49 @@ public class IPv4Check{
 
         if(matchFound){
             System.out.println("The IPv4 you entered is valid");
+            return 1;
         }else{
             System.out.println("The IPv4 you entered is invalid");
+            return 0;
         }
+    }
+
+    // log file 작성 함수
+    public void fileWirte(String filePath, String txt, int checkIP){
+        IPv4Check iCheck = new IPv4Check();
+        String dTime = iCheck.currentTime();
+        String whetherValid = iCheck.whetherValid(checkIP);
+
+        try{
+            File file = new File(filePath);
+
+            FileWriter fw = new FileWriter(file, true);
+            fw.write(txt+" "+whetherValid+" "+dTime+"\r\n");
+            fw.flush();
+
+            fw.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    // fileWrite 함수에 쓰일 현재시각 계산 함수
+    public String currentTime(){
+        long systemTime = System.currentTimeMillis();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.KOREA);
+        String dTime = formatter.format(systemTime);
+
+        return dTime;
+    }
+
+    // fileWirte 함수에 쓰일 String 리턴 함수
+    public String whetherValid(int ipCheck){
+        if(ipCheck == 1){
+            return "The IPv4 is valid";
+        }else{
+            return "The IPv4 is invalid";
+        }
+
     }
 }
