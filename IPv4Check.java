@@ -12,11 +12,11 @@ public class IPv4Check{
         //imutable regular expression checking IPv4
         final String IPv4PatternFinal = "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$";
 
-        String ipString; // args or scanner로 받는 ipString
+        String userIpString; // args or scanner로 받는 ipString
         IPv4Check iCheck = new IPv4Check(); // IPv4Check class iCheck
 
-        ipString = iCheck.checkArg(args); // checkArg 함수에서 리턴받은 String ipString에 저장
-        iCheck.checkIP(IPv4PatternFinal, ipString);
+        userIpString = iCheck.checkArg(args); // checkArg 함수에서 리턴받은 String ipString에 저장
+        iCheck.checkIP(IPv4PatternFinal, userIpString);
 
     }
 
@@ -25,26 +25,26 @@ public class IPv4Check{
     
         if(args.length > 0){ // 인자가 있을 경우
             System.out.println("Entered Argument(IPv4) : " + args[0]);
-            return args[0];
+            return args[0]; // main 에서 받은 args[] 인자값 리턴
         }else{ // 인자가 없을 경우 (Scanner) 
-            String userIpString;
             Scanner sc = new Scanner(System.in);
 
             System.out.print("Enter the IPv4 : ");
-            userIpString = sc.nextLine();
+            String userIpString = sc.nextLine();
             System.out.println("Entered Scanner(IPv4) : " + userIpString);
+
             sc.close();
-            return userIpString;
+            return userIpString; // scanner로 받은 userIpString 값 리턴
         }
 
     }
 
     // 정규식 패턴과 사용자가 입력한값을 비교하여 IPv4 valid or invalid cmd에 출력하는 함수
-    public void checkIP(String IPv4PatternFinal, String ipString){
+    public void checkIP(String IPv4PatternFinal, String userIpString){
         
         Pattern pattern = Pattern.compile(IPv4PatternFinal);
-        Matcher matcher = pattern.matcher(ipString);
-        Boolean matchFound = matcher.find();
+        Matcher matcher = pattern.matcher(userIpString);
+        Boolean matchFound = matcher.find(); // matcher.find()함수는 패턴과 입력값이 매치하면 true, 매치하지않으면 false를 리턴한다
 
         if(matchFound){
             System.out.println("The IPv4 you entered is valid");
